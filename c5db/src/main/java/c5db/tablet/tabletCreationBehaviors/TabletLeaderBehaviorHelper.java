@@ -18,8 +18,8 @@ package c5db.tablet.tabletCreationBehaviors;
 
 import c5db.C5ServerConstants;
 import c5db.interfaces.C5Module;
-import c5db.interfaces.C5Server;
 import c5db.interfaces.ControlModule;
+import c5db.interfaces.ModuleInformationProvider;
 import c5db.interfaces.server.CommandRpcRequest;
 import c5db.messages.generated.CommandReply;
 import c5db.messages.generated.ModuleSubCommand;
@@ -48,7 +48,8 @@ public class TabletLeaderBehaviorHelper {
     return leaderNodeId[0];
   }
 
-  static void sendRequest(CommandRpcRequest<ModuleSubCommand> commandCommandRpcRequest, C5Server server)
+  static void sendRequest(CommandRpcRequest<ModuleSubCommand> commandCommandRpcRequest,
+                          ModuleInformationProvider moduleInformationProvider)
       throws ExecutionException, InterruptedException {
 
     Request<CommandRpcRequest<?>, CommandReply> request = new Request<CommandRpcRequest<?>, CommandReply>() {
@@ -67,7 +68,7 @@ public class TabletLeaderBehaviorHelper {
 
       }
     };
-    ListenableFuture<C5Module> f = server.getModule(ModuleType.ControlRpc);
+    ListenableFuture<C5Module> f = moduleInformationProvider.getModule(ModuleType.ControlRpc);
     ControlModule controlService;
     controlService = (ControlModule) f.get();
     controlService.doMessage(request);

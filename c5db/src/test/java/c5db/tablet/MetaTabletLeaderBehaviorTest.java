@@ -72,13 +72,13 @@ public class MetaTabletLeaderBehaviorTest {
       oneOf(rootTablet).getLeader();
       will(returnValue(1l));
 
-      oneOf(c5Server).getNodeId();
+      allowing(c5Server).getNodeId();
       will(returnValue(1l));
 
       oneOf(controlRpcModule).doMessage(with(any(Request.class)));
       then(state.is("done"));
     }});
-    MetaTabletLeaderBehavior metaTabletLeaderBehavior = new MetaTabletLeaderBehavior(c5Server);
+    MetaTabletLeaderBehavior metaTabletLeaderBehavior = new MetaTabletLeaderBehavior(c5Server.getNodeId(), c5Server);
     metaTabletLeaderBehavior.start();
     sync.waitUntil(state.is("done"));
   }
